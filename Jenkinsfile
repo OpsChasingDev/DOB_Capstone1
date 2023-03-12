@@ -65,6 +65,7 @@ pipeline {
                         sh 'git add .'
                         sh 'git commit -m "incrementing app version"'
                         sh 'git push origin main'
+                    }
                 }
             }
         }
