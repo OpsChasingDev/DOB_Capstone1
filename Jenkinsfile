@@ -1,18 +1,30 @@
 pipeline {
     agent any
     tools {
-        maven 'maven-3.6.0'
+        maven 'Maven'
     }
     environment {
         DOCKER_REPO_SERVER = '718318228454.dkr.ecr.us-east-1.amazonaws.com'
         DOCKER_REPO = "${DOCKER_REPO_SERVER}/java-maven-app"
     }
     stages {
+        stage("increment version") {
+            steps {
+                script {
+                    echo 'incrementing app version...'
+                    sh 'mvn build-helper:parse-version versions:set \
+                        -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} \'
+                    def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
+                    def version = matcher[0][1]
+                    env.IMAGE_NAME = "$version-$BUILD_NUMBER"
+                }
+            }
+        }
         stage("build jar") {
             steps {
                 script {
                     echo "building the application..."
-                    sh 'mvn package'
+                    sh 'mvn clean package'
                 }
             }
         }
