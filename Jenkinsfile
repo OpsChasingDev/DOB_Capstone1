@@ -43,6 +43,7 @@ pipeline {
         }
         stage("deploy") {
             environment {
+                // TODO: ADJUST THES CREDS
                 AWS_ACCESS_KEY_ID = credentials('jenkins_aws_access_key_id')
                 AWS_SECRET_ACCESS_KEY = credentials('jenkins_aws_secret_access_key')
                 APP_NAME = 'java-maven-app'
