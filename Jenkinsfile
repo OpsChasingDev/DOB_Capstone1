@@ -54,7 +54,7 @@ pipeline {
                     echo "deploying the application..."
                     // create secret so K8s cluster can have access to private repo
                     withCredentials([usernamePassword(credentialsId: 'ecr-credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]){
-                        sh 'kubectl create secret docker-registry my-registry-key \
+                        sh 'kubectl create secret docker-registry aws-registry-key \
                             --docker-server=${DOCKER_REPO_SERVER} \
                             --docker-username=$USER \
                             --docker-password=$PASS'
