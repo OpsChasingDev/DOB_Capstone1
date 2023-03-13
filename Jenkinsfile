@@ -33,6 +33,7 @@ pipeline {
             steps {
                 script {
                     echo "building the docker image..."
+                    // TODO: create secret so K8s cluster can have access to private repo (video9 @15:00)
                     withCredentials([usernamePassword(credentialsId: 'ecr-credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]){
                         sh "docker build -t ${DOCKER_REPO}:${IMAGE_NAME} ."
                         sh "echo $PASS | docker login -u $USER --password-stdin ${DOCKER_REPO_SERVER}"
@@ -51,6 +52,18 @@ pipeline {
             steps {
                 script {
                     echo "deploying the application..."
+                    // create secret so K8s cluster can have access to private repo
+                    withCredentials([usernamePassword(credentialsId: 'ecr-credentials', passwordVariable: 'PASS', usernameVariable: 'USER')]){
+                        sh 'kubectl create secret docker-registry my-registry-key \
+                            --docker-server=${DOCKER_REPO_SERVER} \
+                            --docker-username=$USER \
+                            --docker-password=$PASS'
+                    }
+                    // envsubst is responsible for passing the env vars like $APP_NAME to the yaml files
+                    // results are then piped to kubectl apply and passed as a parameter at the end
+                    // envsubst must be installed on the Jenkins server and is not out-of-the-box
+                    // make available on Jenkins by installing "gettext-base" tool
+                    // "apt-get install gettext-base"
                     sh 'envsubst < kubernetes/deployment.yaml | kubectl apply -f -'
                     sh 'envsubst < kubernetes/services.yaml | kubectl apply -f -'
                 }
