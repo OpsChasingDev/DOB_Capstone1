@@ -10,12 +10,37 @@ https://s3.us-west-2.amazonaws.com/amazon-eks/cloudformation/2020-10-29/amazon-e
 
 *Note here that the information provided in the "Outputs" section of CloudFormation once the VPC is created will be needed later for telling the control plane where to connect to for managing the worker nodes in the cluster.*
 
-3. Create the EKS cluster
+3. Create the EKS cluster (manual option)
    1. Specify the role we created in step 1 as the Cluster Service Role option.
    2. Specify the ID of the new VPC we created in step 2 with CloudFormation.
    3. Specify the security group of the new VPC we created in step 2.
    4. Choose an endpoint access option (this determines from where your worker nodes access the managed VPC running the master nodes managed by AWS automatically with the EKS service).  Ideal choice is "Public and Private".
-4. Connect to the EKS cluster
+4. Create EKS Cluster using eksctl (automated - skip step 5 if doing this method)
+   1. Install eksctl (use [chocolatey](https://chocolatey.org/install) for Windows)
+      ```PowerShell
+      choco install eksctl
+      ```
+   2. Configure AWS creds for eksctl - the below should list a ~/.aws/config file present
+      ```Bash
+      aws configure list
+      ```
+   3. Run command to create cluster using any default overrides (or run yaml file containing this information)
+      ```PowerShell
+      eksctl create cluster `
+      --name demo-cluster `
+      --version 1.25 `
+      --region us-east-1 `
+      --nodegroup-name demo-nodes `
+      --node-type t2.micro `
+      --nodes 2 `
+      --nodes-min 1 `
+      --nodes-max 3
+      ```
+   4. After some time, EKS will be available to connect to automatically using the newly generated kubeconfig file.  Verify the cluster is running with worker nodes by running the below:
+      ```Bash
+      kubectl.exe get node
+      ```
+5. Connect to the EKS cluster
    1. From a terminal, run the below to verify the value for the "region" field matches where the cluster was created (if not, this will need to be changed in the AWS CLI with "aws configure")
       ```Bash
       aws configure list
