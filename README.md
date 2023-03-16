@@ -111,4 +111,4 @@ https://s3.us-west-2.amazonaws.com/amazon-eks/cloudformation/2020-10-29/amazon-e
          ```Bash
          docker cp config {{ container_id }}:/var/jenkins_home/.kube/
          ```
-6. Prepare credentials for AWS User in Jenkins by creating two "secret text" type credentials in Jenkins server UI; one for the AWS Access Key ID, and another for the AWS Secret Access Key.
+6. Prepare credentials for AWS User in Jenkins by creating two "secret text" type credentials in Jenkins server UI; one for the AWS Access Key ID, and another for the AWS Secret Access Key.  These are what the Jenkinsfile references with the environment variables "AWS_ACCESS_KEY_ID" and "AWS_SECRET_ACCESS_KEY".
