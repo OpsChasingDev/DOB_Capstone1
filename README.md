@@ -1,8 +1,8 @@
 # DOB_Capstone1
-Increment and build an app version artifact to a private ECR repository and deploy the app to AWS EKS cluster.
+Increment and build an app version artifact to a private ECR repository and deploy the app to AWS EKS cluster using Jenkins pipeline.  The EKS cluster must be deployed and ready to receive the configuration along with the ECR repository in AWS and necessary preparations on Jenkins server.
 
-CloudFormation template used for EKS VPC:
-https://s3.us-west-2.amazonaws.com/amazon-eks/cloudformation/2020-10-29/amazon-eks-vpc-private-subnets.yaml
+## Reference
+CloudFormation [template](https://s3.us-west-2.amazonaws.com/amazon-eks/cloudformation/2020-10-29/amazon-eks-vpc-private-subnets.yaml) used for EKS VPC:
 
 ## Pre-Deployment Steps - EKS Cluster Configuration
 1. Create IAMs role to give AWS Service trusted entity type the ability to manage EKS Cluster on our behalf.  This should have the "AmazonEKSClusterPolicy" AWS managed policy attached to it by default during setup.
