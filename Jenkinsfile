@@ -1,3 +1,4 @@
+// designed to run in EKS cluster - see README for pre-deployment steps both for deploying the EKS cluster and preparing the Jenkins server
 pipeline {
     agent any
     tools {
